@@ -6,18 +6,29 @@ const routes = require("./routes");
 const app = express();
 
 // CORS - allow admin panel origin
+// app.use(cors({
+//   origin: [
+//     "http://localhost:5173",  // Vite dev server
+//     "http://localhost:3000",  // Alternative dev port
+//     "http://localhost:4173",  // Vite preview
+//     process.env.ADMIN_ORIGIN || "*"
+//   ],
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"]
+// }));
 app.use(cors({
   origin: [
-    "http://localhost:5173",  // Vite dev server
-    "http://localhost:3000",  // Alternative dev port
-    "http://localhost:4173",  // Vite preview
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:4173",
+    "https://palify-admin-panel-frontend-production.up.railway.app",
     process.env.ADMIN_ORIGIN || "*"
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 app.use(express.json({ limit: "10mb" }));
 
 // Health check
