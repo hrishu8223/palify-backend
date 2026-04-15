@@ -22,18 +22,34 @@ const getDashboardService = async () => {
 };
 
 // Users
+// const getUsersService = async () => {
+//   const [users] = await db.query(`
+//     SELECT 
+//       u.id, u.full_name, u.email_address, u.created_at,
+//       COUNT(b.id) as total_bookings,
+//       COALESCE(s.name, 'Free') as plan,
+//       CASE WHEN u.is_active = 1 THEN 'Active' ELSE 'Inactive' END as status
+//     FROM users u
+//     LEFT JOIN bookings b ON b.user_id = u.id
+//     LEFT JOIN user_subscriptions us ON us.user_id = u.id
+//     LEFT JOIN subscriptions s ON s.id = us.plan_id
+//     GROUP BY u.id
+//     ORDER BY u.created_at DESC
+//   `);
+//   return users;
+// };
 const getUsersService = async () => {
   const [users] = await db.query(`
     SELECT 
       u.id, u.full_name, u.email_address, u.created_at,
       COUNT(b.id) as total_bookings,
-      COALESCE(s.name, 'Free') as plan,
+      COALESCE(MAX(s.name), 'Free') as plan,
       CASE WHEN u.is_active = 1 THEN 'Active' ELSE 'Inactive' END as status
     FROM users u
     LEFT JOIN bookings b ON b.user_id = u.id
     LEFT JOIN user_subscriptions us ON us.user_id = u.id
     LEFT JOIN subscriptions s ON s.id = us.plan_id
-    GROUP BY u.id
+    GROUP BY u.id, u.full_name, u.email_address, u.created_at, u.is_active
     ORDER BY u.created_at DESC
   `);
   return users;
